@@ -1,0 +1,42 @@
+{
+  "name": "cosmic-omni-brain-ai",
+  "description": "\ud83d\udd2e COSMIC OMNI-BRAIN AI v\u221e.UNBEATABLE - Ultimate Binary Options Signal Bot",
+  "image": "heroku/python",
+  "stack": "heroku-22",
+  "keywords": [
+    "ai",
+    "trading",
+    "binary-options",
+    "flask"
+  ],
+  "website": "https://github.com/cosmic-ai/omni-brain",
+  "repository": "https://github.com/cosmic-ai/omni-brain",
+  "env": {
+    "FLASK_ENV": {
+      "description": "Flask environment",
+      "value": "production"
+    },
+    "TELEGRAM_BOT_TOKEN": {
+      "description": "Telegram Bot Token for signal delivery",
+      "required": false
+    },
+    "TELEGRAM_CHAT_ID": {
+      "description": "Telegram Chat ID for signals",
+      "required": false
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "free"
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "https://github.com/heroku/heroku-buildpack-apt"
+    },
+    {
+      "url": "heroku/python"
+    }
+  ]
+}
