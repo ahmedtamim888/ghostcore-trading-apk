@@ -11,6 +11,7 @@ from ai_core.perception import CandlePerception
 from ai_core.context_engine import MarketContextEngine
 from ai_core.strategy_engine import DynamicStrategyEngine
 from ai_core.utils import TradingUtils
+from cosmic_features import CosmicTradingFeatures
 
 class CosmicOmniBrainAI:
     """The ultimate binary options signal bot - COSMIC OMNI-BRAIN AI v∞.UNBEATABLE"""
@@ -24,6 +25,7 @@ class CosmicOmniBrainAI:
         self.context_engine = MarketContextEngine()
         self.strategy_engine = DynamicStrategyEngine()
         self.utils = TradingUtils()
+        self.trading_features = CosmicTradingFeatures()
         
         # Performance tracking
         self.analysis_count = 0
@@ -214,6 +216,20 @@ def health_check():
         'version': cosmic_ai.version,
         'timestamp': cosmic_ai.utils.get_bd_time()
     })
+
+@app.route('/dashboard')
+def dashboard():
+    """Advanced trading dashboard"""
+    return render_template('dashboard.html')
+
+@app.route('/api/dashboard-data')
+def dashboard_data():
+    """API endpoint for dashboard data"""
+    try:
+        dashboard_data = cosmic_ai.trading_features.get_trading_dashboard_data()
+        return jsonify(dashboard_data)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 # Periodic cleanup
 @app.before_first_request
