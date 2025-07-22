@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COSMIC OMNI-BRAIN AI v∞.UNBEATABLE</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .cosmic-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 80%, rgba(120, 0, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(0, 255, 255, 0.1) 0%, transparent 50%);
+            z-index: -1;
+            animation: cosmic-pulse 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes cosmic-pulse {
+            0% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        .header {
+            text-align: center;
+            padding: 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .title {
+            font-size: 3rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #00ffff, #ff00ff, #ffff00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: brightness(1); }
+            to { filter: brightness(1.2); }
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #cccccc;
+            margin-bottom: 1rem;
+        }
+
+        .version {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .main-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .upload-section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: #00ffff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .upload-area {
+            border: 2px dashed #00ffff;
+            border-radius: 10px;
+            padding: 3rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-area.dragover {
+            border-color: #ff00ff;
+            background: rgba(255, 0, 255, 0.1);
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: #00ffff;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .upload-text {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-hint {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .analyze-btn {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border: none;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 1rem;
+            width: 100%;
+            transition: all 0.3s ease;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .analyze-btn.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .analyze-btn:hover.active {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .results-section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #00ff00;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .preview-container {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .signal-result {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid;
+        }
+
+        .signal-call {
+            border-left-color: #00ff00;
+        }
+
+        .signal-put {
+            border-left-color: #ff0000;
+        }
+
+        .signal-no-trade {
+            border-left-color: #ffff00;
+        }
+
+        .signal-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .signal-type {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .confidence-score {
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+
+        .strategy-name {
+            color: #00ffff;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .reasoning {
+            color: #cccccc;
+            line-height: 1.5;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid #00ffff;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .system-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .stat-item {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #00ffff;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+            
+            .title {
+                font-size: 2rem;
+            }
+            
+            .upload-area {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cosmic-bg"></div>
+    
+    <div class="header">
+        <h1 class="title">COSMIC OMNI-BRAIN AI</h1>
+        <p class="subtitle">Advanced Binary Options Signal Generation</p>
+        <span class="version">v∞.UNBEATABLE</span>
+    </div>
+
+    <div class="main-container">
+        <div class="upload-section">
+            <h2 class="section-title">
+                📊 Chart Analysis
+            </h2>
+            
+            <div class="upload-area" onclick="document.getElementById('chartFile').click()">
+                <div class="upload-icon">📈</div>
+                <div class="upload-text">Drop your chart screenshot here</div>
+                <div class="upload-hint">or click to select file (PNG, JPG, JPEG)</div>
+                <input type="file" id="chartFile" class="file-input" accept="image/*">
+            </div>
+            
+            <button class="analyze-btn" id="analyzeBtn">
+                🧠 ANALYZE CHART
+            </button>
+            
+            <div class="system-stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="totalAnalyses">0</div>
+                    <div class="stat-label">Total Analyses</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="successRate">0%</div>
+                    <div class="stat-label">Success Rate</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="systemStatus">ACTIVE</div>
+                    <div class="stat-label">System Status</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="results-section">
+            <h2 class="section-title">
+                🎯 AI Analysis Results
+            </h2>
+            
+            <div class="status-indicator">
+                <div class="status-dot"></div>
+                <span>COSMIC AI ENGINE READY</span>
+            </div>
+            
+            <div id="resultsContainer">
+                <div style="text-align: center; padding: 3rem; color: #666;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🌌</div>
+                    <div>Upload a chart to begin AI analysis</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedFile = null;
+        
+        // File upload handling
+        const uploadArea = document.querySelector('.upload-area');
+        const fileInput = document.getElementById('chartFile');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const resultsContainer = document.getElementById('resultsContainer');
+        
+        // Drag and drop events
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFileSelect(files[0]);
+            }
+        });
+        
+        // File input change
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFileSelect(e.target.files[0]);
+            }
+        });
+        
+        function handleFileSelect(file) {
+            if (!file.type.startsWith('image/')) {
+                alert('Please select an image file');
+                return;
+            }
+            
+            selectedFile = file;
+            
+            // Show preview
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                showPreview(e.target.result, file.name);
+            };
+            reader.readAsDataURL(file);
+            
+            // Enable analyze button
+            analyzeBtn.classList.add('active');
+        }
+        
+        function showPreview(imageSrc, fileName) {
+            resultsContainer.innerHTML = `
+                <div class="preview-container">
+                    <img src="${imageSrc}" alt="Chart Preview" class="preview-image">
+                    <p style="margin-top: 1rem; color: #888;">📁 ${fileName}</p>
+                    <p style="color: #00ffff;">Ready for AI analysis</p>
+                </div>
+            `;
+        }
+        
+        // Analyze button
+        analyzeBtn.addEventListener('click', () => {
+            if (!selectedFile) return;
+            
+            analyzeChart();
+        });
+        
+        async function analyzeChart() {
+            // Show loading
+            resultsContainer.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>🧠 COSMIC AI ANALYZING...</p>
+                    <p style="color: #888; margin-top: 0.5rem;">Processing chart patterns & market psychology</p>
+                </div>
+            `;
+            
+            // Prepare form data
+            const formData = new FormData();
+            formData.append('chart', selectedFile);
+            
+            try {
+                const response = await fetch('/analyze', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    displayResults(result);
+                    updateStats();
+                } else {
+                    displayError(result.error || 'Analysis failed');
+                }
+                
+            } catch (error) {
+                displayError('Network error: ' + error.message);
+            }
+        }
+        
+        function displayResults(result) {
+            const signal = result.signal;
+            const confidence = result.confidence;
+            const strategyName = result.name;
+            const reasoning = result.reasoning;
+            const analysisId = result.analysis_id;
+            
+            let signalClass = 'signal-no-trade';
+            let signalEmoji = '⚠️';
+            let signalColor = '#ffff00';
+            
+            if (signal === 'CALL') {
+                signalClass = 'signal-call';
+                signalEmoji = '🚀';
+                signalColor = '#00ff00';
+            } else if (signal === 'PUT') {
+                signalClass = 'signal-put';
+                signalEmoji = '📉';
+                signalColor = '#ff0000';
+            }
+            
+            resultsContainer.innerHTML = `
+                <div class="signal-result ${signalClass}">
+                    <div class="signal-header">
+                        <div class="signal-type" style="color: ${signalColor};">
+                            ${signalEmoji} ${signal}
+                        </div>
+                        <div class="confidence-score">
+                            ${(confidence * 100).toFixed(1)}%
+                        </div>
+                    </div>
+                    
+                    <div class="strategy-name">
+                        🧠 Strategy: ${strategyName}
+                    </div>
+                    
+                    <div class="reasoning">
+                        📊 ${reasoning}
+                    </div>
+                    
+                    <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.9rem; color: #888;">
+                        Analysis #${analysisId} | ${new Date().toLocaleTimeString()} UTC+6
+                        ${signal !== 'NO TRADE' ? '<br>📱 Signal sent to Telegram' : ''}
+                    </div>
+                </div>
+            `;
+            
+            // Reset for next analysis
+            setTimeout(() => {
+                analyzeBtn.classList.remove('active');
+                selectedFile = null;
+                fileInput.value = '';
+            }, 2000);
+        }
+        
+        function displayError(errorMessage) {
+            resultsContainer.innerHTML = `
+                <div class="signal-result" style="border-left-color: #ff0000;">
+                    <div style="color: #ff0000; font-size: 1.2rem; margin-bottom: 1rem;">
+                        ❌ Analysis Error
+                    </div>
+                    <div style="color: #ccc;">
+                        ${errorMessage}
+                    </div>
+                </div>
+            `;
+        }
+        
+        async function updateStats() {
+            try {
+                const response = await fetch('/status');
+                const stats = await response.json();
+                
+                document.getElementById('totalAnalyses').textContent = stats.total_analyses;
+                document.getElementById('successRate').textContent = stats.success_rate.toFixed(1) + '%';
+                document.getElementById('systemStatus').textContent = stats.status;
+                
+            } catch (error) {
+                console.error('Failed to update stats:', error);
+            }
+        }
+        
+        // Load initial stats
+        updateStats();
+        
+        // Auto-refresh stats every 30 seconds
+        setInterval(updateStats, 30000);
+    </script>
+</body>
+</html>
