@@ -1,339 +1,272 @@
 """
-🔮 COSMIC OMNI-BRAIN AI v∞.UNBEATABLE - MAIN APPLICATION
-The ultimate binary options signal bot with infinite adaptability
+COSMIC OMNI-BRAIN AI v∞.UNBEATABLE
+Main Flask Application
+Advanced Chart Analysis Web Interface
 """
 
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, send_from_directory
 from werkzeug.utils import secure_filename
 import os
-import cv2
-import numpy as np
-from datetime import datetime, timezone, timedelta
 import json
-from typing import Dict, Any, Optional
+from datetime import datetime
+import traceback
 
-# Import our AI core modules
-from ai_core import CandlePerception, MarketContextEngine, DynamicStrategyEngine, TradingUtils
+# Import AI Core modules
+from ai_core.perception import CandlePerception
+from ai_core.context_engine import MarketContextEngine
+from ai_core.strategy_engine import DynamicStrategyEngine
+from ai_core.utils import TradingUtils
 
-# Initialize Flask app
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'cosmic_omni_brain_infinite_power'
-app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
+app.config['UPLOAD_FOLDER'] = 'uploads'
+app.config['SECRET_KEY'] = 'cosmic_omni_brain_unbeatable_2024'
 
-# Ensure upload directory exists
+# Ensure upload folder exists
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
+# Initialize AI components
+perception = CandlePerception()
+context_engine = MarketContextEngine()
+strategy_engine = DynamicStrategyEngine()
+utils = TradingUtils()
+
 class CosmicOmniBrainAI:
-    """
-    🧠 THE ULTIMATE TRADING AI
-    100-billion-year-trained entity with infinite adaptability
-    """
-    
     def __init__(self):
-        self.name = "COSMIC OMNI-BRAIN AI"
-        self.version = "∞.UNBEATABLE"
-        
-        print("🔮" * 80)
-        print("🔮" + " INITIALIZING COSMIC OMNI-BRAIN AI v∞.UNBEATABLE ".center(78) + "🔮")
-        print("🔮" + " THE ULTIMATE BINARY OPTIONS SIGNAL BOT ".center(78) + "🔮")
-        print("🔮" * 80)
-        
-        # Initialize AI modules
-        print("🧠 Loading Perception Engine...")
-        self.perception = CandlePerception()
-        
-        print("🧠 Loading Context Engine...")
-        self.context_engine = MarketContextEngine()
-        
-        print("🧠 Loading Strategy Engine...")
-        self.strategy_engine = DynamicStrategyEngine()
-        
-        print("🛠️ Loading Utility Systems...")
-        self.utils = TradingUtils()
-        
-        print("✅ COSMIC OMNI-BRAIN AI FULLY LOADED!")
-        print("🔮" * 80)
-        
-        # Configuration
-        self.bd_timezone = timezone(timedelta(hours=6))  # UTC+6
-        
-        # Performance tracking
         self.analysis_count = 0
-        self.session_start = datetime.now()
+        self.successful_signals = 0
         
-    def analyze_chart_screenshot(self, image_path: str) -> Dict[str, Any]:
-        """
-        🎯 MASTER CHART ANALYSIS FUNCTION
-        The core brain that analyzes everything
-        """
-        
-        print(f"\n🔮 COSMIC ANALYSIS #{self.analysis_count + 1} INITIATED")
-        print("=" * 60)
-        
+    def analyze_chart(self, image_data, filename):
+        """Main chart analysis pipeline"""
         try:
-            # Validate image
-            validation = self.utils.validate_image_file(image_path)
-            if not validation['valid']:
-                return self._create_error_response(validation['error'])
+            self.analysis_count += 1
+            current_time = utils.get_bd_time()
             
-            # Load image
-            print("📸 Loading chart image...")
-            image = cv2.imread(image_path)
-            if image is None:
-                return self._create_error_response("Failed to load image")
+            print(f"🧠 Starting analysis #{self.analysis_count} at {current_time.strftime('%H:%M:%S')}")
             
-            print(f"📊 Image loaded: {image.shape[1]}x{image.shape[0]} pixels")
+            # Step 1: Perception - Extract chart data
+            print("📊 Step 1: Advanced Perception Analysis...")
+            chart_data = perception.analyze_chart_image(image_data)
+            if not chart_data:
+                return self._create_error_response("Failed to analyze chart image")
             
-            # 1. PERCEPTION ANALYSIS
-            print("\n🧠 PHASE 1: PERCEPTION ANALYSIS")
-            chart_analysis = self.perception.analyze_chart_structure(image)
+            # Step 2: Context Analysis - Understand market psychology
+            print("🧠 Step 2: Market Context & Psychology Analysis...")
+            market_context = context_engine.analyze_market_psychology(chart_data, current_time)
             
-            candles_detected = len(chart_analysis.get('candles', []))
-            print(f"✅ Detected {candles_detected} candlesticks")
-            print(f"✅ Analysis quality: {chart_analysis.get('analysis_quality', 0):.2f}")
+            # Step 3: Detect traps and fakeouts
+            print("🎯 Step 3: Trap & Fakeout Detection...")
+            traps = context_engine.detect_traps_and_fakeouts(chart_data, chart_data['price_levels'])
+            market_context['traps'] = traps
             
-            # 2. MARKET CONTEXT ANALYSIS
-            print("\n🧠 PHASE 2: MARKET CONTEXT ANALYSIS")
-            market_context = self.context_engine.analyze_market_psychology(chart_analysis)
+            # Step 4: Calculate trend fatigue
+            print("⚡ Step 4: Trend Fatigue Analysis...")
+            fatigue = context_engine.calculate_trend_fatigue(
+                chart_data['structure'], 
+                market_context['dominant_emotion']
+            )
+            market_context['trend_fatigue'] = fatigue
             
-            sentiment = market_context.get('sentiment', {})
-            print(f"✅ Market sentiment: {sentiment.get('label', 'unknown')}")
-            print(f"✅ Context confidence: {market_context.get('confidence', 0):.2f}")
-            
-            # 3. DYNAMIC STRATEGY GENERATION
-            print("\n🧠 PHASE 3: DYNAMIC STRATEGY GENERATION")
-            strategy_result = self.strategy_engine.generate_dynamic_strategy(chart_analysis, market_context)
-            
-            strategy_name = strategy_result.get('strategy_name', 'Unknown')
-            print(f"✅ Strategy generated: {strategy_name}")
-            print(f"✅ Strategy confidence: {strategy_result.get('confidence', 0):.2f}")
-            
-            # 4. CONFIDENCE CALCULATION
-            print("\n🧠 PHASE 4: CONFIDENCE CALCULATION")
-            confidence_analysis = self.utils.calculate_confidence_score(
-                chart_analysis, market_context, strategy_result
+            # Step 5: Generate dynamic strategy
+            print("🚀 Step 5: Dynamic Strategy Generation...")
+            strategy_result = strategy_engine.generate_dynamic_strategy(
+                chart_data, market_context, current_time
             )
             
-            overall_confidence = confidence_analysis.get('overall_confidence', 0)
-            confidence_grade = confidence_analysis.get('confidence_grade', 'Unknown')
-            print(f"✅ Overall confidence: {overall_confidence:.2f} ({confidence_grade})")
+            # Step 6: Validate and finalize
+            print("✅ Step 6: Validation & Signal Generation...")
+            final_result = self._finalize_analysis(
+                strategy_result, chart_data, market_context, current_time, filename
+            )
             
-            # 5. SIGNAL GENERATION
-            print("\n🧠 PHASE 5: SIGNAL GENERATION")
-            entry_logic = strategy_result.get('entry_logic', {})
-            signal = entry_logic.get('signal', 'NO TRADE')
-            signal_reason = entry_logic.get('reason', 'Unknown reason')
-            
-            print(f"✅ Generated signal: {signal}")
-            print(f"✅ Signal reason: {signal_reason}")
-            
-            # 6. COMPREHENSIVE RESULT COMPILATION
-            print("\n🧠 PHASE 6: RESULT COMPILATION")
-            
-            # Get current time
-            time_info = self.utils.get_bd_time()
-            
-            # Compile complete analysis result
-            analysis_result = {
-                'analysis_id': self.utils.generate_analysis_id(),
-                'timestamp': time_info['iso'],
-                'current_time': time_info['current_time'],
-                'signal': signal,
-                'confidence': confidence_analysis,
-                'strategy': strategy_result,
-                'market_context': market_context,
-                'chart_analysis': chart_analysis,
-                'entry_logic': entry_logic,
-                'signal_reasoning': signal_reason,
-                'ai_version': self.version,
-                'analysis_number': self.analysis_count + 1,
-                'success': True
-            }
-            
-            # 7. TELEGRAM DELIVERY
-            print("\n🧠 PHASE 7: TELEGRAM DELIVERY")
-            
-            if signal in ['CALL', 'PUT']:
-                telegram_success = self.utils.send_telegram_signal(analysis_result, image_path)
-                analysis_result['telegram_sent'] = telegram_success
-                
-                if telegram_success:
-                    print("✅ Signal sent to Telegram successfully!")
-                else:
-                    print("❌ Failed to send signal to Telegram")
+            # Step 7: Send to Telegram
+            if final_result['signal'] != 'NO TRADE':
+                print("📱 Step 7: Sending to Telegram...")
+                telegram_message = utils.create_signal_message(final_result, current_time)
+                utils.send_telegram_signal(telegram_message, image_data)
+                self.successful_signals += 1
             else:
-                print("⚠️ No trade signal - not sending to Telegram")
-                analysis_result['telegram_sent'] = False
+                print("⚠️ Step 7: No trade conditions - sending NO TRADE message...")
+                no_trade_message = utils.create_no_trade_message(final_result.get('reason', 'Market conditions unclear'))
+                utils.send_telegram_signal(no_trade_message)
             
-            # 8. LOGGING AND STATISTICS
-            print("\n🧠 PHASE 8: LOGGING & STATISTICS")
-            self.utils.log_analysis(analysis_result)
-            self.analysis_count += 1
+            # Log the analysis
+            utils.log_analysis(chart_data, final_result)
             
-            # Cleanup old files
-            self.utils.cleanup_old_files()
+            print(f"🎯 Analysis #{self.analysis_count} complete: {final_result['signal']} ({final_result['confidence']:.2f})")
             
-            print("=" * 60)
-            print(f"🔮 COSMIC ANALYSIS #{self.analysis_count} COMPLETED SUCCESSFULLY!")
-            print("=" * 60)
-            
-            return analysis_result
+            return final_result
             
         except Exception as e:
-            error_msg = f"Analysis error: {str(e)}"
-            print(f"❌ {error_msg}")
-            return self._create_error_response(error_msg)
+            print(f"❌ Error in analysis: {str(e)}")
+            traceback.print_exc()
+            return self._create_error_response(f"Analysis failed: {str(e)}")
     
-    def _create_error_response(self, error_message: str) -> Dict[str, Any]:
-        """Create standardized error response"""
+    def _finalize_analysis(self, strategy_result, chart_data, market_context, current_time, filename):
+        """Finalize analysis with all validations"""
         
-        return {
-            'analysis_id': 'ERROR',
-            'timestamp': datetime.now().isoformat(),
-            'signal': 'ERROR',
-            'confidence': {'overall_confidence': 0.0, 'confidence_grade': 'Error'},
-            'error': error_message,
-            'success': False,
-            'telegram_sent': False
-        }
-    
-    def get_system_status(self) -> Dict[str, Any]:
-        """Get comprehensive system status"""
-        
-        system_info = self.utils.get_system_info()
-        performance_stats = self.utils.get_performance_stats()
-        
-        return {
-            'ai_name': self.name,
-            'ai_version': self.version,
-            'status': 'ONLINE',
-            'uptime': str(datetime.now() - self.session_start),
-            'total_analyses': self.analysis_count,
-            'system_info': system_info,
-            'performance': performance_stats,
-            'modules': {
-                'perception': self.perception.name,
-                'context_engine': self.context_engine.name,
-                'strategy_engine': self.strategy_engine.name,
-                'utils': self.utils.name
+        # Check trading hours
+        if not utils.is_trading_hours(current_time):
+            return {
+                'signal': 'NO TRADE',
+                'reason': 'Outside trading hours (6 AM - 10 PM UTC+6)',
+                'confidence': 0.0,
+                'name': 'No Strategy',
+                'reasoning': 'Market closed',
+                'analysis_id': utils.generate_analysis_id(),
+                'timestamp': current_time.isoformat()
             }
+        
+        # Check confidence threshold
+        if not utils.validate_confidence_threshold(strategy_result['confidence'], 0.72):
+            return {
+                'signal': 'NO TRADE',
+                'reason': f'Confidence {strategy_result["confidence"]:.2f} below threshold (0.72)',
+                'confidence': strategy_result['confidence'],
+                'name': strategy_result['name'],
+                'reasoning': strategy_result['reasoning'],
+                'analysis_id': utils.generate_analysis_id(),
+                'timestamp': current_time.isoformat()
+            }
+        
+        # Add analysis metadata
+        strategy_result.update({
+            'analysis_id': utils.generate_analysis_id(),
+            'timestamp': current_time.isoformat(),
+            'filename': filename,
+            'image_hash': utils.hash_image(open(f"uploads/{filename}", 'rb').read()) if filename else None,
+            'market_narrative': context_engine.generate_market_narrative(
+                market_context['dominant_emotion'],
+                market_context['institutional_activity'],
+                market_context['retail_sentiment'],
+                market_context.get('traps', []),
+                market_context.get('trend_fatigue', {})
+            )
+        })
+        
+        return strategy_result
+    
+    def _create_error_response(self, error_message):
+        """Create standardized error response"""
+        return {
+            'signal': 'ERROR',
+            'reason': error_message,
+            'confidence': 0.0,
+            'name': 'Error',
+            'reasoning': 'Analysis failed',
+            'analysis_id': utils.generate_analysis_id(),
+            'timestamp': utils.get_bd_time().isoformat()
         }
 
-# Initialize the AI
+# Initialize the AI system
 cosmic_ai = CosmicOmniBrainAI()
-
-# Flask Routes
 
 @app.route('/')
 def index():
-    """Main interface"""
+    """Main web interface"""
     return render_template('index.html')
 
 @app.route('/analyze', methods=['POST'])
 def analyze_chart():
-    """
-    🎯 MAIN ANALYSIS ENDPOINT
-    Receives chart upload and returns complete analysis
-    """
-    
+    """Analyze uploaded chart"""
     try:
-        # Check if file is present
-        if 'chart_image' not in request.files:
-            return jsonify({'error': 'No file uploaded', 'success': False}), 400
+        if 'chart' not in request.files:
+            return jsonify({'error': 'No chart file uploaded'}), 400
         
-        file = request.files['chart_image']
-        
+        file = request.files['chart']
         if file.filename == '':
-            return jsonify({'error': 'No file selected', 'success': False}), 400
+            return jsonify({'error': 'No file selected'}), 400
+        
+        if not utils.validate_image_file(file.filename):
+            return jsonify({'error': 'Invalid file type. Please upload an image.'}), 400
         
         # Save uploaded file
         filename = secure_filename(file.filename)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        unique_filename = f"{timestamp}_{filename}"
-        filepath = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
-        
+        filename = f"{timestamp}_{filename}"
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(filepath)
         
-        print(f"\n📁 File saved: {unique_filename}")
+        # Read image data
+        with open(filepath, 'rb') as f:
+            image_data = f.read()
         
-        # Perform analysis
-        result = cosmic_ai.analyze_chart_screenshot(filepath)
+        # Analyze the chart
+        result = cosmic_ai.analyze_chart(image_data, filename)
         
-        # Add file info to result
-        result['uploaded_file'] = unique_filename
-        result['file_path'] = filepath
+        # Clean up old files
+        utils.cleanup_old_files()
         
         return jsonify(result)
         
     except Exception as e:
-        error_response = {
-            'error': f'Server error: {str(e)}',
-            'success': False,
-            'timestamp': datetime.now().isoformat()
-        }
-        return jsonify(error_response), 500
+        return jsonify({'error': f'Analysis failed: {str(e)}'}), 500
 
 @app.route('/status')
-def system_status():
-    """Get system status and performance metrics"""
-    
+def status():
+    """Get system status"""
     try:
-        status = cosmic_ai.get_system_status()
-        return jsonify(status)
-    
-    except Exception as e:
-        return jsonify({'error': str(e), 'status': 'ERROR'}), 500
-
-@app.route('/health')
-def health_check():
-    """Simple health check endpoint"""
-    
-    return jsonify({
-        'status': 'healthy',
-        'ai_version': cosmic_ai.version,
-        'timestamp': datetime.now().isoformat(),
-        'analyses_performed': cosmic_ai.analysis_count
-    })
-
-@app.route('/api/telegram/test', methods=['POST'])
-def test_telegram():
-    """Test Telegram connectivity"""
-    
-    try:
-        test_message = {
-            'strategy': {
-                'strategy_name': 'Telegram Test',
-                'description': 'Testing Telegram connection',
-                'strategy_reasoning': 'System connectivity test',
-                'entry_logic': {'signal': 'TEST', 'reason': 'Connection test'}
-            },
-            'confidence': {'overall_confidence': 1.0},
-            'market_context': {'market_narrative': 'Testing system connectivity'}
+        system_info = utils.get_system_info()
+        
+        status_data = {
+            'status': 'ACTIVE',
+            'ai_version': 'v∞.UNBEATABLE',
+            'total_analyses': cosmic_ai.analysis_count,
+            'successful_signals': cosmic_ai.successful_signals,
+            'success_rate': (cosmic_ai.successful_signals / cosmic_ai.analysis_count * 100) if cosmic_ai.analysis_count > 0 else 0,
+            'system_info': system_info
         }
         
-        success = cosmic_ai.utils.send_telegram_signal(test_message)
-        
-        return jsonify({
-            'telegram_test': 'success' if success else 'failed',
-            'message_sent': success,
-            'timestamp': datetime.now().isoformat()
-        })
+        return jsonify(status_data)
         
     except Exception as e:
-        return jsonify({'telegram_test': 'error', 'error': str(e)}), 500
+        return jsonify({'error': f'Status check failed: {str(e)}'}), 500
+
+@app.route('/health')
+def health():
+    """Health check endpoint"""
+    return jsonify({
+        'status': 'healthy',
+        'timestamp': utils.get_bd_time().isoformat(),
+        'ai_status': 'COSMIC OMNI-BRAIN AI v∞.UNBEATABLE ACTIVE'
+    })
+
+@app.route('/api/telegram/test')
+def test_telegram():
+    """Test Telegram integration"""
+    try:
+        test_message = "🌌 COSMIC OMNI-BRAIN AI v∞.UNBEATABLE\n\n✅ System Status: ACTIVE\n🧠 All modules operational\n📡 Telegram integration: WORKING\n\n🎯 Ready for chart analysis!"
+        
+        result = utils.send_telegram_signal(test_message)
+        
+        if result and result.get('ok'):
+            return jsonify({'status': 'success', 'message': 'Telegram test successful'})
+        else:
+            return jsonify({'status': 'error', 'message': 'Telegram test failed'}), 500
+            
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': f'Telegram test error: {str(e)}'}), 500
+
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    """Serve uploaded files"""
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+@app.errorhandler(413)
+def too_large(e):
+    return jsonify({'error': 'File too large. Maximum size is 16MB.'}), 413
+
+@app.errorhandler(500)
+def internal_error(e):
+    return jsonify({'error': 'Internal server error. Please try again.'}), 500
 
 if __name__ == '__main__':
-    print("\n🚀 STARTING COSMIC OMNI-BRAIN AI SERVER...")
-    print("🌐 Access the web interface at: http://localhost:5000")
-    print("📊 Upload your chart screenshots for instant analysis!")
-    print("⚡ Real-time signals sent directly to Telegram!")
-    print("\n🔮 THE FUTURE OF TRADING AI IS HERE! 🔮\n")
+    print("🌌 COSMIC OMNI-BRAIN AI v∞.UNBEATABLE")
+    print("🧠 Advanced Chart Analysis System")
+    print("🚀 Starting Flask application...")
+    print("📡 Telegram integration: ACTIVE")
+    print("🎯 Ready for chart analysis!")
+    print("=" * 50)
     
-    # Start Flask server
-    app.run(
-        host='0.0.0.0',
-        port=5000,
-        debug=False,  # Set to False for production
-        threaded=True
-    )
+    # Run the application
+    app.run(host='0.0.0.0', port=5000, debug=False)

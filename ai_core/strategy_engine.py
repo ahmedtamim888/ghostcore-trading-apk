@@ -1,633 +1,394 @@
 """
-🔮 COSMIC OMNI-BRAIN AI - STRATEGY ENGINE
-Dynamic strategy generation with infinite adaptability
+COSMIC OMNI-BRAIN AI v∞.UNBEATABLE
+Dynamic Strategy Engine
+Adaptive Logic Generation & Execution
 """
 
-from typing import Dict, List, Any, Optional, Tuple
 import random
+import math
 from datetime import datetime, timezone, timedelta
 
 class DynamicStrategyEngine:
-    """
-    🧠 ULTIMATE STRATEGY GENERATOR
-    Creates unique, adaptive strategies for each chart analysis
-    """
-    
     def __init__(self):
-        self.name = "COSMIC STRATEGY ENGINE"
-        self.version = "∞.UNBEATABLE"
-        
-        # Dynamic strategy templates
-        self.strategy_templates = {
-            'trap_fade_reversal': {
-                'conditions': ['trap_detected', 'reversal_pattern'],
-                'confidence_base': 0.85,
-                'description': 'Fade false breakouts and ride reversals'
+        self.strategy_components = {
+            'trend_following': {
+                'momentum_continuation': {'strength': 0.85, 'risk': 0.3},
+                'trend_pullback': {'strength': 0.75, 'risk': 0.4},
+                'breakout_continuation': {'strength': 0.8, 'risk': 0.35}
             },
-            'momentum_flip': {
-                'conditions': ['momentum_shift', 'volume_confirmation'],
-                'confidence_base': 0.80,
-                'description': 'Catch momentum changes at key levels'
+            'counter_trend': {
+                'exhaustion_reversal': {'strength': 0.9, 'risk': 0.5},
+                'oversold_bounce': {'strength': 0.8, 'risk': 0.45},
+                'trap_fade': {'strength': 0.85, 'risk': 0.4}
             },
-            'liquidity_exhaustion': {
-                'conditions': ['liquidity_zones', 'exhaustion_signals'],
-                'confidence_base': 0.75,
-                'description': 'Trade exhaustion at liquidity zones'
+            'pattern_based': {
+                'candlestick_reversal': {'strength': 0.8, 'risk': 0.4},
+                'support_resistance': {'strength': 0.75, 'risk': 0.35},
+                'pattern_completion': {'strength': 0.8, 'risk': 0.3}
             },
-            'breakout_continuation': {
-                'conditions': ['clean_breakout', 'trend_alignment'],
-                'confidence_base': 0.90,
-                'description': 'Ride continuation after strong breakouts'
+            'liquidity_based': {
+                'liquidity_grab_fade': {'strength': 0.9, 'risk': 0.4},
+                'stop_hunt_reversal': {'strength': 0.85, 'risk': 0.45},
+                'absorption_play': {'strength': 0.8, 'risk': 0.35}
             },
-            'pattern_memory_logic': {
-                'conditions': ['pattern_recognition', 'historical_success'],
-                'confidence_base': 0.70,
-                'description': 'Use pattern memory for high-probability setups'
-            },
-            'institutional_shadow': {
-                'conditions': ['institutional_activity', 'large_orders'],
-                'confidence_base': 0.95,
-                'description': 'Follow institutional footprints'
-            },
-            'volatility_compression': {
-                'conditions': ['low_volatility', 'compression_pattern'],
-                'confidence_base': 0.78,
-                'description': 'Trade expansion after compression'
-            },
-            'sentiment_divergence': {
-                'conditions': ['sentiment_extreme', 'price_divergence'],
-                'confidence_base': 0.82,
-                'description': 'Contrarian plays at sentiment extremes'
+            'time_based': {
+                'session_open_momentum': {'strength': 0.75, 'risk': 0.4},
+                'lunch_hour_reversal': {'strength': 0.7, 'risk': 0.5},
+                'close_positioning': {'strength': 0.8, 'risk': 0.3}
             }
         }
         
-        # Market condition weights
-        self.condition_weights = {
-            'trending': {'breakout_continuation': 1.5, 'momentum_flip': 1.2},
-            'ranging': {'liquidity_exhaustion': 1.4, 'volatility_compression': 1.3},
-            'volatile': {'trap_fade_reversal': 1.6, 'sentiment_divergence': 1.2},
-            'institutional': {'institutional_shadow': 2.0, 'pattern_memory_logic': 1.1}
+        self.market_conditions = {
+            'trending': ['momentum_continuation', 'trend_pullback', 'breakout_continuation'],
+            'ranging': ['support_resistance', 'trap_fade', 'liquidity_grab_fade'],
+            'volatile': ['exhaustion_reversal', 'stop_hunt_reversal', 'pattern_completion'],
+            'quiet': ['absorption_play', 'session_open_momentum', 'candlestick_reversal']
         }
+
+    def generate_dynamic_strategy(self, chart_data, market_context, current_time):
+        """Generate a unique strategy for this specific chart"""
         
-        # Signal strength multipliers
-        self.strength_multipliers = {
-            'confluence_levels': {
-                1: 1.0,
-                2: 1.15,
-                3: 1.30,
-                4: 1.50,
-                5: 1.75
-            },
-            'market_phase': {
-                'markup': 1.2,
-                'markdown': 1.2,
-                'accumulation': 0.9,
-                'distribution': 0.8
-            }
-        }
+        # Extract key components
+        structure = chart_data['structure']
+        psychology = market_context['dominant_emotion']
+        institutional = market_context['institutional_activity']
+        traps = market_context.get('traps', [])
         
-    def generate_dynamic_strategy(self, chart_data: Dict, market_context: Dict) -> Dict:
-        """
-        🚀 GENERATE UNIQUE ADAPTIVE STRATEGY
-        Creates a fresh strategy for each analysis
-        """
-        
-        print("🔮 COSMIC STRATEGY: Generating dynamic strategy...")
-        
-        # Extract key data
-        candles = chart_data.get('candles', [])
-        price_levels = chart_data.get('price_levels', {})
-        patterns = chart_data.get('patterns', [])
-        
-        if not candles:
-            return self._generate_no_trade_strategy()
-        
-        # 1. Analyze market conditions
-        market_conditions = self._analyze_market_conditions(chart_data, market_context)
-        
-        # 2. Identify confluence factors
-        confluence_factors = self._identify_confluence_factors(chart_data, market_context)
-        
-        # 3. Select optimal strategy template
-        selected_strategy = self._select_optimal_strategy(market_conditions, confluence_factors)
-        
-        # 4. Customize strategy for current conditions
-        customized_strategy = self._customize_strategy(
-            selected_strategy, chart_data, market_context, confluence_factors
+        # Build unique strategy architecture
+        strategy_architecture = self._build_strategy_architecture(
+            structure, psychology, institutional, traps, current_time
         )
         
-        # 5. Calculate strategy confidence
-        strategy_confidence = self._calculate_strategy_confidence(
-            customized_strategy, confluence_factors, market_conditions
+        # Generate entry logic
+        entry_logic = self._generate_entry_logic(strategy_architecture, chart_data)
+        
+        # Calculate confidence
+        confidence = self._calculate_strategy_confidence(
+            strategy_architecture, entry_logic, market_context
         )
         
-        # 6. Generate entry/exit logic
-        entry_logic = self._generate_entry_logic(customized_strategy, candles)
-        
-        # 7. Add risk management
-        risk_management = self._generate_risk_management(customized_strategy, market_context)
+        # Create strategy name
+        strategy_name = self._create_unique_strategy_name(strategy_architecture)
         
         return {
-            'strategy_name': customized_strategy['name'],
-            'strategy_type': customized_strategy['type'],
-            'description': customized_strategy['description'],
-            'confidence': strategy_confidence,
-            'market_conditions': market_conditions,
-            'confluence_factors': confluence_factors,
+            'name': strategy_name,
+            'architecture': strategy_architecture,
             'entry_logic': entry_logic,
-            'risk_management': risk_management,
-            'expected_outcome': customized_strategy['expected_outcome'],
-            'strategy_reasoning': customized_strategy['reasoning'],
-            'unique_id': self._generate_strategy_id(),
-            'timestamp': datetime.now().isoformat()
+            'confidence': confidence,
+            'signal': entry_logic['signal'],
+            'reasoning': self._generate_reasoning(strategy_architecture, entry_logic),
+            'risk_level': self._assess_risk_level(strategy_architecture, confidence)
         }
-    
-    def _analyze_market_conditions(self, chart_data: Dict, market_context: Dict) -> Dict:
-        """Analyze current market conditions for strategy selection"""
+
+    def _build_strategy_architecture(self, structure, psychology, institutional, traps, current_time):
+        """Build unique strategy architecture for this market condition"""
         
-        trend = chart_data.get('trend', {})
-        market_structure = chart_data.get('market_structure', {})
-        sentiment = market_context.get('sentiment', {})
-        market_phase = market_context.get('market_phase', {})
-        
-        conditions = {
-            'trend_direction': trend.get('direction', 'unknown'),
-            'trend_strength': trend.get('strength', 0),
-            'market_structure': market_structure.get('structure', 'unknown'),
-            'sentiment_label': sentiment.get('label', 'neutral'),
-            'market_phase': market_phase.get('phase', 'unknown'),
-            'volatility': market_phase.get('volatility', 0),
-            'institutional_activity': market_context.get('institutional', {}).get('activity_level', 'low')
-        }
-        
-        # Classify overall market state
-        if conditions['trend_strength'] > 0.7:
-            conditions['state'] = 'trending'
-        elif conditions['volatility'] > 0.6:
-            conditions['state'] = 'volatile'
-        elif conditions['institutional_activity'] == 'high':
-            conditions['state'] = 'institutional'
+        # Determine market condition
+        if structure['trend'] in ['strong_uptrend', 'strong_downtrend']:
+            condition = 'trending'
+        elif structure['volatility'] == 'high':
+            condition = 'volatile'
+        elif structure['trend'] == 'sideways':
+            condition = 'ranging'
         else:
-            conditions['state'] = 'ranging'
+            condition = 'quiet'
         
-        return conditions
-    
-    def _identify_confluence_factors(self, chart_data: Dict, market_context: Dict) -> List[Dict]:
-        """Identify factors that provide confluence for trading decision"""
-        
-        confluence_factors = []
-        
-        # Price level confluence
-        price_levels = chart_data.get('price_levels', {})
-        if price_levels.get('support') or price_levels.get('resistance'):
-            confluence_factors.append({
-                'type': 'price_levels',
-                'strength': 0.8,
-                'description': 'Strong support/resistance confluence'
-            })
-        
-        # Pattern confluence
-        patterns = chart_data.get('patterns', [])
-        if patterns:
-            confluence_factors.append({
-                'type': 'pattern_recognition',
-                'strength': 0.75,
-                'description': f"Detected {len(patterns)} chart patterns"
-            })
-        
-        # Trend confluence
-        trend = chart_data.get('trend', {})
-        if trend.get('strength', 0) > 0.6:
-            confluence_factors.append({
-                'type': 'trend_alignment',
-                'strength': trend['strength'],
-                'description': f"Strong {trend.get('direction', 'unknown')} trend"
-            })
-        
-        # Market phase confluence
-        market_phase = market_context.get('market_phase', {})
-        if market_phase.get('confidence', 0) > 0.7:
-            confluence_factors.append({
-                'type': 'market_phase',
-                'strength': market_phase['confidence'],
-                'description': f"Clear {market_phase.get('phase', 'unknown')} phase"
-            })
-        
-        # Sentiment confluence
-        sentiment = market_context.get('sentiment', {})
-        if sentiment.get('confidence', 0) > 0.7:
-            confluence_factors.append({
-                'type': 'sentiment_clarity',
-                'strength': sentiment['confidence'],
-                'description': f"Clear {sentiment.get('label', 'neutral')} sentiment"
-            })
-        
-        # Trap/liquidity confluence
-        traps = market_context.get('traps', {})
-        if traps.get('detected'):
-            confluence_factors.append({
-                'type': 'trap_signals',
-                'strength': 0.85,
-                'description': 'Market trap patterns detected'
-            })
-        
-        # Momentum confluence
-        momentum = market_context.get('momentum', {})
-        if momentum.get('shifts'):
-            confluence_factors.append({
-                'type': 'momentum_shifts',
-                'strength': 0.7,
-                'description': 'Clear momentum shift signals'
-            })
-        
-        return confluence_factors
-    
-    def _select_optimal_strategy(self, market_conditions: Dict, confluence_factors: List[Dict]) -> Dict:
-        """Select the best strategy template for current conditions"""
-        
-        market_state = market_conditions.get('state', 'ranging')
-        
-        # Get strategies weighted for current market state
-        weighted_strategies = {}
-        
-        for strategy_name, template in self.strategy_templates.items():
-            base_weight = template['confidence_base']
-            
-            # Apply market condition weights
-            condition_multiplier = self.condition_weights.get(market_state, {}).get(strategy_name, 1.0)
-            
-            # Apply confluence bonus
-            confluence_bonus = 0
-            for factor in confluence_factors:
-                if factor['type'] in template['conditions']:
-                    confluence_bonus += factor['strength'] * 0.1
-            
-            final_weight = base_weight * condition_multiplier + confluence_bonus
-            weighted_strategies[strategy_name] = final_weight
-        
-        # Select strategy with highest weight
-        best_strategy = max(weighted_strategies, key=weighted_strategies.get)
-        
-        return {
-            'name': best_strategy,
-            'template': self.strategy_templates[best_strategy],
-            'weight': weighted_strategies[best_strategy],
-            'market_fit': weighted_strategies[best_strategy] / self.strategy_templates[best_strategy]['confidence_base']
-        }
-    
-    def _customize_strategy(self, selected_strategy: Dict, chart_data: Dict, 
-                          market_context: Dict, confluence_factors: List[Dict]) -> Dict:
-        """Customize the selected strategy for current conditions"""
-        
-        strategy_name = selected_strategy['name']
-        template = selected_strategy['template']
-        
-        # Generate unique strategy variant
-        custom_name = f"{strategy_name.replace('_', ' ').title()} v{random.randint(1000, 9999)}"
-        
-        # Customize description based on current conditions
-        market_conditions = self._analyze_market_conditions(chart_data, market_context)
-        
-        custom_description = self._generate_custom_description(
-            template['description'], market_conditions, confluence_factors
+        # Select primary strategy type based on conditions
+        primary_strategies = self.market_conditions[condition]
+        primary_strategy = self._select_optimal_strategy(
+            primary_strategies, structure, psychology, institutional
         )
         
-        # Generate strategy reasoning
-        reasoning = self._generate_strategy_reasoning(
-            strategy_name, market_conditions, confluence_factors
+        # Add confluence factors
+        confluence_factors = self._identify_confluence_factors(
+            structure, psychology, institutional, traps
         )
         
-        # Determine expected outcome
-        expected_outcome = self._determine_expected_outcome(
-            strategy_name, market_conditions, confluence_factors
-        )
+        # Time-based adjustments
+        time_factor = self._get_time_factor(current_time)
         
         return {
-            'name': custom_name,
-            'type': strategy_name,
-            'description': custom_description,
-            'reasoning': reasoning,
-            'expected_outcome': expected_outcome,
-            'confluence_count': len(confluence_factors),
-            'market_fit': selected_strategy['market_fit']
+            'primary_strategy': primary_strategy,
+            'market_condition': condition,
+            'confluence_factors': confluence_factors,
+            'time_factor': time_factor,
+            'adaptation_score': self._calculate_adaptation_score(structure, psychology)
         }
-    
-    def _generate_custom_description(self, base_description: str, 
-                                   market_conditions: Dict, confluence_factors: List[Dict]) -> str:
-        """Generate custom description for strategy"""
+
+    def _select_optimal_strategy(self, available_strategies, structure, psychology, institutional):
+        """Select the best strategy from available options"""
         
-        market_state = market_conditions.get('state', 'unknown')
-        trend_direction = market_conditions.get('trend_direction', 'unknown')
+        scores = {}
         
-        custom_elements = []
+        for strategy in available_strategies:
+            score = 0.0
+            
+            # Score based on structure alignment
+            if strategy == 'momentum_continuation' and structure['strength'] > 0.7:
+                score += 0.4
+            elif strategy == 'exhaustion_reversal' and structure['strength'] > 0.8:
+                score += 0.5
+            elif strategy == 'trap_fade' and psychology['emotion'] in ['greed', 'fear']:
+                score += 0.6
+            elif strategy == 'liquidity_grab_fade' and institutional['activity'] == 'accumulation':
+                score += 0.5
+            elif strategy == 'support_resistance' and structure['trend'] == 'sideways':
+                score += 0.4
+            
+            # Add psychology alignment
+            if psychology['emotion'] == 'greed' and 'reversal' in strategy:
+                score += 0.3
+            elif psychology['emotion'] == 'fear' and 'bounce' in strategy:
+                score += 0.3
+            
+            scores[strategy] = score
         
-        # Add market condition context
-        if market_state == 'trending':
-            custom_elements.append(f"leveraging {trend_direction} trend momentum")
-        elif market_state == 'volatile':
-            custom_elements.append("exploiting volatility patterns")
-        elif market_state == 'institutional':
-            custom_elements.append("following institutional footprints")
-        else:
-            custom_elements.append("targeting range-bound opportunities")
+        # Return highest scoring strategy
+        return max(scores.items(), key=lambda x: x[1])[0]
+
+    def _identify_confluence_factors(self, structure, psychology, institutional, traps):
+        """Identify factors that support the strategy"""
         
-        # Add confluence context
-        if len(confluence_factors) >= 3:
-            custom_elements.append("with multiple confluence factors")
-        elif len(confluence_factors) >= 2:
-            custom_elements.append("with strong confluence")
+        factors = []
         
-        if custom_elements:
-            return f"{base_description} - {', '.join(custom_elements)}"
-        else:
-            return base_description
-    
-    def _generate_strategy_reasoning(self, strategy_type: str, market_conditions: Dict, 
-                                   confluence_factors: List[Dict]) -> str:
-        """Generate reasoning for strategy selection"""
+        # Trend alignment
+        if structure['strength'] > 0.7:
+            factors.append({
+                'type': 'trend_strength',
+                'value': structure['strength'],
+                'weight': 0.3
+            })
         
-        reasons = []
+        # Psychology extremes
+        if psychology['intensity'] > 0.8:
+            factors.append({
+                'type': 'psychology_extreme',
+                'value': psychology['intensity'],
+                'weight': 0.4
+            })
         
-        # Strategy-specific reasoning
-        if strategy_type == 'trap_fade_reversal':
-            reasons.append("Market showing trap patterns indicating false moves")
-        elif strategy_type == 'momentum_flip':
-            reasons.append("Momentum shift detected at key levels")
-        elif strategy_type == 'liquidity_exhaustion':
-            reasons.append("Liquidity zones showing exhaustion signals")
-        elif strategy_type == 'breakout_continuation':
-            reasons.append("Clean breakout with trend alignment")
-        elif strategy_type == 'institutional_shadow':
-            reasons.append("Institutional activity patterns detected")
+        # Institutional activity
+        if institutional['confidence'] > 0.6:
+            factors.append({
+                'type': 'institutional_signal',
+                'value': institutional['confidence'],
+                'weight': 0.3
+            })
         
-        # Market condition reasoning
-        market_state = market_conditions.get('state', 'unknown')
-        if market_state == 'trending':
-            reasons.append("Strong trending market supports directional plays")
-        elif market_state == 'volatile':
-            reasons.append("High volatility creates reversal opportunities")
+        # Trap signals
+        for trap in traps:
+            if trap['probability'] > 0.6:
+                factors.append({
+                    'type': 'trap_signal',
+                    'value': trap['probability'],
+                    'weight': 0.25
+                })
         
-        # Confluence reasoning
-        confluence_count = len(confluence_factors)
-        if confluence_count >= 3:
-            reasons.append(f"Multiple confluence factors ({confluence_count}) increase probability")
-        elif confluence_count >= 2:
-            reasons.append("Strong confluence supports the setup")
-        
-        return ". ".join(reasons)
-    
-    def _determine_expected_outcome(self, strategy_type: str, market_conditions: Dict, 
-                                  confluence_factors: List[Dict]) -> Dict:
-        """Determine expected outcome for strategy"""
-        
-        # Base probabilities by strategy type
-        base_probabilities = {
-            'trap_fade_reversal': {'win_rate': 0.78, 'risk_reward': 1.5},
-            'momentum_flip': {'win_rate': 0.75, 'risk_reward': 1.8},
-            'liquidity_exhaustion': {'win_rate': 0.72, 'risk_reward': 1.6},
-            'breakout_continuation': {'win_rate': 0.85, 'risk_reward': 2.0},
-            'institutional_shadow': {'win_rate': 0.90, 'risk_reward': 2.5},
-            'pattern_memory_logic': {'win_rate': 0.70, 'risk_reward': 1.4},
-            'volatility_compression': {'win_rate': 0.73, 'risk_reward': 1.7},
-            'sentiment_divergence': {'win_rate': 0.76, 'risk_reward': 1.9}
-        }
-        
-        base_prob = base_probabilities.get(strategy_type, {'win_rate': 0.65, 'risk_reward': 1.3})
-        
-        # Adjust for confluence
-        confluence_bonus = len(confluence_factors) * 0.05
-        adjusted_win_rate = min(0.95, base_prob['win_rate'] + confluence_bonus)
-        
-        # Adjust for market conditions
-        market_state = market_conditions.get('state', 'ranging')
-        if market_state in ['trending', 'institutional']:
-            adjusted_win_rate *= 1.1
-        elif market_state == 'volatile':
-            adjusted_win_rate *= 0.95
-        
-        adjusted_win_rate = min(0.95, adjusted_win_rate)
-        
-        return {
-            'win_rate': adjusted_win_rate,
-            'risk_reward_ratio': base_prob['risk_reward'],
-            'expected_value': adjusted_win_rate * base_prob['risk_reward'] - (1 - adjusted_win_rate),
-            'confidence_level': 'high' if adjusted_win_rate > 0.8 else 'medium' if adjusted_win_rate > 0.7 else 'low'
-        }
-    
-    def _calculate_strategy_confidence(self, customized_strategy: Dict, 
-                                     confluence_factors: List[Dict], market_conditions: Dict) -> float:
-        """Calculate overall confidence in the strategy"""
-        
-        # Base confidence from strategy type
-        base_confidence = 0.7
-        
-        # Market fit bonus
-        market_fit = customized_strategy.get('market_fit', 1.0)
-        market_bonus = (market_fit - 1.0) * 0.2
-        
-        # Confluence bonus
-        confluence_count = len(confluence_factors)
-        confluence_bonus = min(confluence_count * 0.05, 0.2)
-        
-        # Expected outcome bonus
-        expected_outcome = customized_strategy.get('expected_outcome', {})
-        outcome_bonus = (expected_outcome.get('win_rate', 0.7) - 0.7) * 0.3
-        
-        # Trend strength bonus
-        trend_strength = market_conditions.get('trend_strength', 0)
-        trend_bonus = trend_strength * 0.1
-        
-        total_confidence = base_confidence + market_bonus + confluence_bonus + outcome_bonus + trend_bonus
-        
-        return min(0.98, max(0.3, total_confidence))
-    
-    def _generate_entry_logic(self, customized_strategy: Dict, candles: List[Dict]) -> Dict:
+        return factors
+
+    def _generate_entry_logic(self, architecture, chart_data):
         """Generate specific entry logic for the strategy"""
         
-        strategy_type = customized_strategy['type']
+        primary_strategy = architecture['primary_strategy']
+        structure = chart_data['structure']
+        confluence = architecture['confluence_factors']
         
-        if not candles:
-            return {'signal': 'NO TRADE', 'reason': 'Insufficient data'}
-        
-        last_candle = candles[-1]
-        recent_candles = candles[-3:] if len(candles) >= 3 else candles
-        
-        # Strategy-specific entry logic
-        if strategy_type == 'trap_fade_reversal':
-            return self._trap_fade_entry_logic(recent_candles)
-        elif strategy_type == 'momentum_flip':
-            return self._momentum_flip_entry_logic(recent_candles)
-        elif strategy_type == 'breakout_continuation':
-            return self._breakout_continuation_entry_logic(recent_candles)
-        elif strategy_type == 'liquidity_exhaustion':
-            return self._liquidity_exhaustion_entry_logic(recent_candles)
-        else:
-            return self._generic_entry_logic(recent_candles)
-    
-    def _trap_fade_entry_logic(self, candles: List[Dict]) -> Dict:
-        """Entry logic for trap fade reversal strategy"""
-        
-        if len(candles) < 2:
-            return {'signal': 'NO TRADE', 'reason': 'Insufficient candles for trap analysis'}
-        
-        last_candle = candles[-1]
-        prev_candle = candles[-2]
-        
-        # Look for reversal after potential trap
-        if (prev_candle['direction'] != last_candle['direction'] and 
-            last_candle['strength'] > 0.6):
-            
-            signal = 'CALL' if last_candle['direction'] == 'bullish' else 'PUT'
-            return {
-                'signal': signal,
-                'reason': f'Trap fade reversal - {last_candle["direction"]} reversal after potential trap',
-                'entry_candle': last_candle['id'],
-                'confidence_boost': 0.1
-            }
-        
-        return {'signal': 'NO TRADE', 'reason': 'No clear trap reversal pattern'}
-    
-    def _momentum_flip_entry_logic(self, candles: List[Dict]) -> Dict:
-        """Entry logic for momentum flip strategy"""
-        
-        if len(candles) < 3:
-            return {'signal': 'NO TRADE', 'reason': 'Insufficient candles for momentum analysis'}
-        
-        # Check for momentum change
-        recent_strengths = [c['strength'] for c in candles]
-        if recent_strengths[-1] > recent_strengths[-2] * 1.2:
-            
-            last_candle = candles[-1]
-            signal = 'CALL' if last_candle['direction'] == 'bullish' else 'PUT'
-            
-            return {
-                'signal': signal,
-                'reason': f'Momentum flip detected - {last_candle["direction"]} strength increase',
-                'entry_candle': last_candle['id'],
-                'confidence_boost': 0.15
-            }
-        
-        return {'signal': 'NO TRADE', 'reason': 'No clear momentum flip'}
-    
-    def _breakout_continuation_entry_logic(self, candles: List[Dict]) -> Dict:
-        """Entry logic for breakout continuation strategy"""
-        
-        last_candle = candles[-1]
-        
-        # Look for strong breakout candle
-        if last_candle['strength'] > 0.7 and last_candle['pattern'] in ['marubozu', 'long_body']:
-            
-            signal = 'CALL' if last_candle['direction'] == 'bullish' else 'PUT'
-            
-            return {
-                'signal': signal,
-                'reason': f'Strong {last_candle["direction"]} breakout continuation',
-                'entry_candle': last_candle['id'],
-                'confidence_boost': 0.2
-            }
-        
-        return {'signal': 'NO TRADE', 'reason': 'No strong breakout pattern detected'}
-    
-    def _liquidity_exhaustion_entry_logic(self, candles: List[Dict]) -> Dict:
-        """Entry logic for liquidity exhaustion strategy"""
-        
-        last_candle = candles[-1]
-        
-        # Look for exhaustion patterns (long wicks)
-        if (last_candle['ratios']['upper_wick'] > 0.4 or 
-            last_candle['ratios']['lower_wick'] > 0.4):
-            
-            # Determine direction based on wick
-            if last_candle['ratios']['upper_wick'] > last_candle['ratios']['lower_wick']:
-                signal = 'PUT'  # Upper wick rejection
-                reason = 'Upper wick rejection at resistance'
+        # Base signal determination
+        if 'continuation' in primary_strategy:
+            if structure['trend'] == 'strong_uptrend':
+                base_signal = 'CALL'
+            elif structure['trend'] == 'strong_downtrend':
+                base_signal = 'PUT'
             else:
-                signal = 'CALL'  # Lower wick rejection
-                reason = 'Lower wick rejection at support'
-            
-            return {
-                'signal': signal,
-                'reason': reason,
-                'entry_candle': last_candle['id'],
-                'confidence_boost': 0.1
-            }
+                base_signal = 'NO TRADE'
         
-        return {'signal': 'NO TRADE', 'reason': 'No clear exhaustion signals'}
-    
-    def _generic_entry_logic(self, candles: List[Dict]) -> Dict:
-        """Generic entry logic for other strategies"""
+        elif 'reversal' in primary_strategy or 'fade' in primary_strategy:
+            if structure['trend'] == 'strong_uptrend':
+                base_signal = 'PUT'  # Fade the uptrend
+            elif structure['trend'] == 'strong_downtrend':
+                base_signal = 'CALL'  # Fade the downtrend
+            else:
+                base_signal = 'NO TRADE'
         
-        last_candle = candles[-1]
+        elif 'bounce' in primary_strategy:
+            if structure['bullish_percentage'] < 0.3:
+                base_signal = 'CALL'  # Oversold bounce
+            else:
+                base_signal = 'NO TRADE'
         
-        # Simple momentum-based logic
-        if last_candle['strength'] > 0.6:
-            signal = 'CALL' if last_candle['direction'] == 'bullish' else 'PUT'
-            
-            return {
-                'signal': signal,
-                'reason': f'Strong {last_candle["direction"]} momentum',
-                'entry_candle': last_candle['id'],
-                'confidence_boost': 0.05
-            }
-        
-        return {'signal': 'NO TRADE', 'reason': 'Insufficient signal strength'}
-    
-    def _generate_risk_management(self, customized_strategy: Dict, market_context: Dict) -> Dict:
-        """Generate risk management parameters"""
-        
-        sentiment = market_context.get('sentiment', {})
-        volatility = market_context.get('market_phase', {}).get('volatility', 0.5)
-        
-        # Base risk parameters
-        base_risk = 2.0  # 2% risk per trade
-        
-        # Adjust for volatility
-        if volatility > 0.7:
-            risk_multiplier = 0.8  # Reduce risk in high volatility
-        elif volatility < 0.3:
-            risk_multiplier = 1.2  # Increase risk in low volatility
         else:
-            risk_multiplier = 1.0
+            # Support/resistance or pattern-based
+            if len(confluence) > 2:
+                # Multiple confluence factors suggest direction
+                avg_confluence = sum(f['value'] for f in confluence) / len(confluence)
+                if avg_confluence > 0.7:
+                    base_signal = 'CALL' if structure['bullish_percentage'] > 0.5 else 'PUT'
+                else:
+                    base_signal = 'NO TRADE'
+            else:
+                base_signal = 'NO TRADE'
         
-        # Adjust for confidence
-        confidence = customized_strategy.get('confidence', 0.7)
-        confidence_multiplier = 0.8 + (confidence * 0.4)  # 0.8 to 1.2 range
-        
-        adjusted_risk = base_risk * risk_multiplier * confidence_multiplier
-        
-        return {
-            'risk_per_trade': f"{adjusted_risk:.1f}%",
-            'stop_loss': "Next candle close against position",
-            'take_profit': "1.5-2.0x risk reward ratio",
-            'position_sizing': "Based on account risk tolerance",
-            'max_trades_per_day': 3,
-            'avoid_conditions': [
-                "Major news events",
-                "Market close proximity",
-                "Extreme volatility spikes"
-            ]
-        }
-    
-    def _generate_strategy_id(self) -> str:
-        """Generate unique strategy ID"""
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        random_suffix = random.randint(1000, 9999)
-        return f"COSMIC_STRATEGY_{timestamp}_{random_suffix}"
-    
-    def _generate_no_trade_strategy(self) -> Dict:
-        """Generate no-trade strategy when conditions are unclear"""
+        # Generate entry conditions
+        entry_conditions = self._create_entry_conditions(primary_strategy, structure)
         
         return {
-            'strategy_name': 'NO TRADE - Market Unclear',
-            'strategy_type': 'no_trade',
-            'description': 'Market conditions do not meet criteria for high-probability trades',
-            'confidence': 0.0,
-            'market_conditions': {'state': 'unclear'},
-            'confluence_factors': [],
-            'entry_logic': {'signal': 'NO TRADE', 'reason': 'Insufficient market clarity'},
-            'risk_management': {'recommendation': 'Wait for clearer setup'},
-            'expected_outcome': {'win_rate': 0.0, 'risk_reward_ratio': 0.0},
-            'strategy_reasoning': 'No clear strategy applicable to current market conditions',
-            'unique_id': self._generate_strategy_id(),
-            'timestamp': datetime.now().isoformat()
+            'signal': base_signal,
+            'entry_conditions': entry_conditions,
+            'confluence_score': len(confluence)
         }
+
+    def _create_entry_conditions(self, strategy, structure):
+        """Create specific entry conditions"""
+        
+        conditions = []
+        
+        if 'momentum' in strategy:
+            conditions.append(f"Momentum strength > {structure['strength']:.1f}")
+            conditions.append("Volume confirmation required")
+        
+        elif 'reversal' in strategy:
+            conditions.append("Exhaustion signals present")
+            conditions.append(f"Trend strength at extreme ({structure['strength']:.1f})")
+        
+        elif 'fade' in strategy:
+            conditions.append("False breakout confirmed")
+            conditions.append("Quick reversal expected")
+        
+        elif 'bounce' in strategy:
+            conditions.append("Oversold conditions")
+            conditions.append("Support level holding")
+        
+        return conditions
+
+    def _calculate_strategy_confidence(self, architecture, entry_logic, market_context):
+        """Calculate confidence in the strategy"""
+        
+        base_confidence = 0.5
+        
+        # Primary strategy strength
+        strategy_name = architecture['primary_strategy']
+        if strategy_name in ['exhaustion_reversal', 'liquidity_grab_fade']:
+            base_confidence += 0.2
+        elif strategy_name in ['momentum_continuation', 'trap_fade']:
+            base_confidence += 0.15
+        else:
+            base_confidence += 0.1
+        
+        # Confluence factors boost
+        confluence_boost = len(architecture['confluence_factors']) * 0.05
+        base_confidence += confluence_boost
+        
+        # Market psychology alignment
+        psychology = market_context['dominant_emotion']
+        if psychology['intensity'] > 0.8:
+            base_confidence += 0.1
+        
+        # Institutional activity alignment
+        institutional = market_context['institutional_activity']
+        if institutional['confidence'] > 0.7:
+            base_confidence += 0.08
+        
+        # Time factor adjustment
+        time_boost = architecture['time_factor'] * 0.05
+        base_confidence += time_boost
+        
+        # Adaptation score (uniqueness bonus)
+        adaptation_bonus = architecture['adaptation_score'] * 0.1
+        base_confidence += adaptation_bonus
+        
+        return min(base_confidence, 0.98)  # Cap at 98%
+
+    def _get_time_factor(self, current_time):
+        """Get time-based factor (0.0 to 1.0)"""
+        hour = current_time.hour
+        
+        # Peak trading hours (9-11 AM, 2-4 PM UTC+6)
+        if 9 <= hour <= 11 or 14 <= hour <= 16:
+            return 1.0
+        # Good trading hours
+        elif 8 <= hour <= 18:
+            return 0.8
+        # Quiet hours
+        else:
+            return 0.4
+
+    def _calculate_adaptation_score(self, structure, psychology):
+        """Calculate how well adapted the strategy is"""
+        
+        # Higher adaptation for unique market conditions
+        uniqueness = 0.0
+        
+        # Unusual trend combinations
+        if structure['trend'] == 'weak_trend' and structure['volatility'] == 'high':
+            uniqueness += 0.3
+        
+        # Extreme psychology states
+        if psychology['emotion'] in ['euphoria', 'panic']:
+            uniqueness += 0.4
+        
+        # Mixed signals (requires adaptation)
+        if abs(structure['bullish_percentage'] - 0.5) < 0.1:
+            uniqueness += 0.2
+        
+        return min(uniqueness, 1.0)
+
+    def _create_unique_strategy_name(self, architecture):
+        """Create a unique name for the strategy"""
+        
+        primary = architecture['primary_strategy'].replace('_', ' ').title()
+        condition = architecture['market_condition'].title()
+        confluence_count = len(architecture['confluence_factors'])
+        
+        if confluence_count >= 3:
+            modifier = "Multi-Confluence"
+        elif confluence_count == 2:
+            modifier = "Dual-Signal"
+        else:
+            modifier = "Single-Factor"
+        
+        return f"{modifier} {primary}"
+
+    def _generate_reasoning(self, architecture, entry_logic):
+        """Generate human-readable reasoning"""
+        
+        primary = architecture['primary_strategy']
+        confluence = architecture['confluence_factors']
+        signal = entry_logic['signal']
+        
+        reasoning = f"Strategy: {primary.replace('_', ' ').title()}"
+        
+        if signal != 'NO TRADE':
+            reasoning += f" | Signal: {signal} direction identified"
+            
+            if confluence:
+                confluence_types = [f['type'] for f in confluence]
+                reasoning += f" | Confluence: {', '.join(confluence_types)}"
+        
+        return reasoning
+
+    def _assess_risk_level(self, architecture, confidence):
+        """Assess the risk level of the strategy"""
+        
+        primary = architecture['primary_strategy']
+        confluence_count = len(architecture['confluence_factors'])
+        
+        # Base risk from strategy type
+        if 'reversal' in primary or 'fade' in primary:
+            base_risk = 0.5  # Higher risk strategies
+        else:
+            base_risk = 0.3  # Lower risk strategies
+        
+        # Reduce risk with more confluence
+        risk_reduction = confluence_count * 0.05
+        
+        # Reduce risk with higher confidence
+        confidence_reduction = (confidence - 0.5) * 0.2
+        
+        final_risk = max(base_risk - risk_reduction - confidence_reduction, 0.1)
+        
+        if final_risk > 0.4:
+            return 'high'
+        elif final_risk > 0.25:
+            return 'medium'
+        else:
+            return 'low'
